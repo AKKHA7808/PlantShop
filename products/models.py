@@ -1,3 +1,5 @@
+from decimal import Decimal
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -22,7 +24,7 @@ class Product(models.Model):
         null=True, blank=True, related_name='products'
     )
     description = models.TextField('รายละเอียดสินค้า', blank=True)
-    price = models.DecimalField('ราคา', max_digits=10, decimal_places=2)
+    price = models.DecimalField('ราคา', max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.01"))])
     stock = models.PositiveIntegerField('จำนวนคงเหลือ', default=0)
     image = models.ImageField('รูปสินค้า', upload_to='products/', blank=True, null=True)
     created_at = models.DateTimeField('วันที่เพิ่มสินค้า', auto_now_add=True)

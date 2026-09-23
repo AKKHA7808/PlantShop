@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.views.decorators.http import require_POST
 
 from .forms import RegisterForm
 
@@ -41,6 +42,7 @@ class CustomLoginView(LoginView):
         return super().form_invalid(form)
 
 
+@require_POST
 def logout_view(request):
     """ออกจากระบบ"""
     logout(request)

@@ -71,7 +71,8 @@ class Cart:
             self.save()
 
     def clear(self):
-        self.session[CART_SESSION_KEY] = {}
+        self.cart = {}
+        self.session[CART_SESSION_KEY] = self.cart
         self.save()
 
     def __iter__(self):
@@ -80,10 +81,14 @@ class Cart:
         products = Product.objects.filter(id__in=product_ids)
         products_map = {str(p.id): p for p in products}
 
+        # เก็บรายการสินค้าที่ต้องถูกลบออก (ลบตอนลูปไม่ได้เพราะ Dictionary changed size during iteration)
+        items_to_remove = []
+
         for product_id, quantity in self.cart.items():
             product = products_map.get(product_id)
             if not product:
-                continue  # สินค้าอาจถูกลบออกจากระบบไปแล้ว
+                items_to_remove.append(product_id)
+                continue
             subtotal = product.price * quantity
             yield {
                 'product': product,
@@ -91,7 +96,13 @@ class Cart:
                 'subtotal': subtotal,
             }
 
+        if items_to_remove:
+            for pid in items_to_remove:
+                del self.cart[pid]
+            self.save()
+
     def __len__(self):
+        # นับเฉพาะสินค้าที่ยังคงอยู่ในระบบเท่านั้น (ถูกคลีนโดย __iter__ แล้ว หรือนับแค่ key ที่ชัวร์)
         return sum(self.cart.values())
 
     def get_total_price(self):

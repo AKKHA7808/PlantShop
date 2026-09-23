@@ -9,10 +9,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- Security ---
 # หมายเหตุ: ใน production จริงควรเก็บ SECRET_KEY ไว้ใน environment variable
+# เช่น: import os; SECRET_KEY = os.environ.get('SECRET_KEY', 'default-key')
 SECRET_KEY = 'django-insecure-change-this-key-for-production-usage'
 
+# ควรใช้ os.environ.get('DEBUG', 'True') == 'True' ใน production
 DEBUG = True
 
+# ควรระบุโดเมนจริงใน production เช่น ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 ALLOWED_HOSTS = ['*']
 
 # --- Applications ---

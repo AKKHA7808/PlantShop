@@ -25,32 +25,41 @@ def checkout_view(request):
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
         if form.is_valid():
-            # ตรวจสอบสต็อกอีกครั้งก่อนตัดจริง เผื่อสต็อกเปลี่ยนไปหลังจากเพิ่มลงตะกร้า
-            for item in cart:
-                if item['quantity'] > item['product'].stock:
-                    messages.error(
-                        request,
-                        f"สินค้า '{item['product'].name}' มีคงเหลือไม่พอ (เหลือ {item['product'].stock} ชิ้น)"
-                    )
-                    return redirect('cart:cart_detail')
-
             with transaction.atomic():
+                # ดึง product ID ทั้งหมดในตะกร้า
+                product_ids = [item['product'].id for item in cart]
+                
+                # ล็อกแถวของสินค้าเหล่านี้ในฐานข้อมูลเพื่อป้องกัน Race Condition
+                products_in_cart = Product.objects.select_for_update().filter(id__in=product_ids)
+                product_map = {p.id: p for p in products_in_cart}
+
+                # ตรวจสอบสต็อกอีกครั้งก่อนตัดจริง
+                for item in cart:
+                    locked_product = product_map.get(item['product'].id)
+                    if not locked_product or item['quantity'] > locked_product.stock:
+                        stock_left = locked_product.stock if locked_product else 0
+                        messages.error(
+                            request,
+                            f"สินค้า '{item['product'].name}' มีคงเหลือไม่พอ (เหลือ {stock_left} ชิ้น)"
+                        )
+                        return redirect('cart:cart_detail')
+
                 order = form.save(commit=False)
                 order.user = request.user
                 order.total_price = cart.get_total_price()
                 order.save()
 
                 for item in cart:
-                    product = item['product']
+                    locked_product = product_map.get(item['product'].id)
                     OrderDetail.objects.create(
                         order=order,
-                        product=product,
+                        product=locked_product,
                         quantity=item['quantity'],
-                        price=product.price,
+                        price=locked_product.price,
                     )
-                    # ลด stock สินค้า
-                    product.stock -= item['quantity']
-                    product.save()
+                    # ลด stock สินค้าและบันทึกเฉพาะฟิลด์ stock
+                    locked_product.stock -= item['quantity']
+                    locked_product.save(update_fields=['stock'])
 
                 cart.clear()
 

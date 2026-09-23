@@ -1,4 +1,6 @@
+from decimal import Decimal
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from products.models import Product
@@ -43,15 +45,16 @@ class OrderDetail(models.Model):
     """รายการสินค้าในคำสั่งซื้อแต่ละรายการ"""
     order = models.ForeignKey(Order, verbose_name='คำสั่งซื้อ', on_delete=models.CASCADE, related_name='details')
     product = models.ForeignKey(Product, verbose_name='สินค้า', on_delete=models.SET_NULL, null=True)
-    quantity = models.PositiveIntegerField('จำนวน')
-    price = models.DecimalField('ราคาต่อชิ้น (ตอนสั่งซื้อ)', max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField('จำนวน', validators=[MinValueValidator(1)])
+    price = models.DecimalField('ราคาต่อชิ้น (ตอนสั่งซื้อ)', max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.01"))])
 
     class Meta:
         verbose_name = 'รายการสินค้าในคำสั่งซื้อ'
         verbose_name_plural = 'รายการสินค้าในคำสั่งซื้อ'
 
     def __str__(self):
-        return f'{self.product} x {self.quantity}'
+        product_name = self.product.name if self.product else "สินค้าที่ถูกลบ"
+        return f"{product_name} x {self.quantity}"
 
     @property
     def subtotal(self):
