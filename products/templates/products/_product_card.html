@@ -1,0 +1,31 @@
+<div class="col">
+    <div class="card h-100">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+        {% else %}
+        <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted">
+            <i class="bi bi-flower2" style="font-size: 3rem;"></i>
+        </div>
+        {% endif %}
+        <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="price-tag">{{ product.price }} ฿</p>
+            {% if product.is_out_of_stock %}
+            <p class="out-of-stock mb-2"><i class="bi bi-x-circle"></i> สินค้าหมด</p>
+            {% else %}
+            <p class="text-muted mb-3 small">คงเหลือ {{ product.stock }} ชิ้น</p>
+            {% endif %}
+            <div class="mt-auto d-flex gap-2">
+                <a href="{% url 'products:product_detail' product.pk %}" class="btn btn-outline-primary btn-sm flex-fill">ดูรายละเอียด</a>
+                {% if not product.is_out_of_stock %}
+                <form method="post" action="{% url 'cart:add' product.pk %}" class="flex-fill">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-sm w-100">
+                        <i class="bi bi-cart-plus"></i> ซื้อเลย
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

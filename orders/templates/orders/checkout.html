@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}ยืนยันคำสั่งซื้อ - สวนใบไม้{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">ยืนยันคำสั่งซื้อ</h3>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h5 class="mb-3">ข้อมูลการจัดส่ง</h5>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field.errors }}
+                    {{ field }}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary w-100">ยืนยันคำสั่งซื้อ</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h5 class="mb-3">สรุปรายการสั่งซื้อ</h5>
+            <ul class="list-group list-group-flush mb-3">
+                {% for item in cart %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                    <span>{{ item.subtotal }} บาท</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="d-flex justify-content-between fw-bold fs-5">
+                <span>ราคารวม</span>
+                <span>{{ cart.get_total_price }} บาท</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

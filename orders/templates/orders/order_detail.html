@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}รายละเอียดคำสั่งซื้อ #{{ order.id }} - สวนใบไม้{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">รายละเอียดคำสั่งซื้อ #{{ order.id }}</h3>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h6>ข้อมูลการจัดส่ง</h6>
+            <p class="mb-1">ผู้รับ: {{ order.receiver_name }}</p>
+            <p class="mb-1">เบอร์โทร: {{ order.phone }}</p>
+            <p class="mb-0">ที่อยู่: {{ order.shipping_address }}</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h6>สถานะคำสั่งซื้อ</h6>
+            <p class="mb-1">วันที่สั่งซื้อ: {{ order.created_at|date:"d/m/Y H:i" }}</p>
+            <p class="mb-0">สถานะ: <span class="badge bg-info text-dark">{{ order.get_status_display }}</span></p>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table bg-white align-middle">
+        <thead>
+            <tr>
+                <th>สินค้า</th>
+                <th>ราคา/ชิ้น</th>
+                <th>จำนวน</th>
+                <th>ราคารวม</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detail in order.details.all %}
+            <tr>
+                <td>{{ detail.product.name|default:"สินค้านี้ถูกลบออกจากระบบแล้ว" }}</td>
+                <td>{{ detail.price }} บาท</td>
+                <td>{{ detail.quantity }}</td>
+                <td>{{ detail.subtotal }} บาท</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3" class="text-end">ราคารวมทั้งหมด</th>
+                <th>{{ order.total_price }} บาท</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<a href="{% url 'orders:order_history' %}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> กลับไปประวัติการสั่งซื้อ
+</a>
+{% endblock %}

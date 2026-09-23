@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}ตะกร้าสินค้า - สวนใบไม้{% endblock %}
+
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-cart3"></i> ตะกร้าสินค้าของคุณ</h3>
+
+{% if cart|length > 0 %}
+<div class="table-responsive">
+    <table class="table align-middle bg-white">
+        <thead>
+            <tr>
+                <th>สินค้า</th>
+                <th>ราคา/ชิ้น</th>
+                <th style="width: 160px;">จำนวน</th>
+                <th>ราคารวม</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+            <tr>
+                <td>
+                    <a href="{% url 'products:product_detail' item.product.pk %}" class="text-decoration-none text-dark">
+                        {{ item.product.name }}
+                    </a>
+                </td>
+                <td>{{ item.product.price }} บาท</td>
+                <td>
+                    <div class="d-flex align-items-center gap-1">
+                        <form method="post" action="{% url 'cart:update' item.product.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="decrease">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+                        </form>
+                        <span class="px-2">{{ item.quantity }}</span>
+                        <form method="post" action="{% url 'cart:update' item.product.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="increase">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+                        </form>
+                    </div>
+                </td>
+                <td>{{ item.subtotal }} บาท</td>
+                <td>
+                    <form method="post" action="{% url 'cart:remove' item.product.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3" class="text-end">ราคารวมทั้งหมด</th>
+                <th colspan="2">{{ cart.get_total_price }} บาท</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div class="text-end">
+    <a href="{% url 'products:product_list' %}" class="btn btn-outline-secondary">เลือกซื้อสินค้าต่อ</a>
+    <a href="{% url 'orders:checkout' %}" class="btn btn-primary">ดำเนินการสั่งซื้อ</a>
+</div>
+
+{% else %}
+<div class="alert alert-secondary">
+    ตะกร้าของคุณยังว่างเปล่า <a href="{% url 'products:product_list' %}">เลือกซื้อสินค้า</a>
+</div>
+{% endif %}
+{% endblock %}

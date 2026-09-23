@@ -1,0 +1,259 @@
+/* ธีมร้านต้นไม้และดอกไม้ประดับ - โทนสีเขียวธรรมชาติ (Modern & Natural Aesthetic) */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary: #2C5E3A; /* Deep Forest Green */
+    --primary-light: #3d7e4f;
+    --secondary: #8CA790; /* Sage Green */
+    --accent: #CC7A52; /* Earthy Terracotta */
+    --bg-color: #FAFAF5; /* Warm Cream */
+    --text-main: #2b3a2f;
+    --text-muted: #6b7a6f;
+    --white: #ffffff;
+    --shadow-soft: 0 10px 30px rgba(44, 94, 58, 0.08);
+    --shadow-hover: 0 20px 40px rgba(44, 94, 58, 0.15);
+    --navbar-bg: rgba(255, 255, 255, 0.85);
+    --navbar-border: rgba(44, 94, 58, 0.1);
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-pill: 50px;
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+[data-theme="dark"] {
+    --primary: #4a915f; /* Lighter Forest Green for better contrast in dark mode */
+    --primary-light: #5cb376;
+    --secondary: #657a68;
+    --accent: #e8956f;
+    --bg-color: #121a14; /* Very dark green/black */
+    --text-main: #e8eee9;
+    --text-muted: #a3b3a6;
+    --white: #1a241c; /* Dark surface color for cards */
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.7);
+    --navbar-bg: rgba(18, 26, 20, 0.85);
+    --navbar-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Prompt', 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'Outfit', 'Prompt', sans-serif;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Navbar - Glassmorphism */
+.navbar {
+    background-color: var(--navbar-bg) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--navbar-border);
+    padding: 1rem 0;
+    transition: var(--transition);
+}
+
+.navbar.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    color: var(--primary) !important;
+    letter-spacing: -0.5px;
+}
+
+.navbar-nav .nav-link {
+    color: var(--text-main) !important;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem;
+    border-radius: var(--radius-pill);
+    transition: var(--transition);
+}
+
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+    background-color: rgba(140, 167, 144, 0.15);
+    color: var(--primary) !important;
+}
+
+/* Buttons */
+.btn {
+    border-radius: var(--radius-pill);
+    padding: 0.6rem 1.5rem;
+    font-weight: 500;
+    transition: var(--transition);
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(44, 94, 58, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-light);
+    border-color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(44, 94, 58, 0.3);
+}
+
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    color: var(--white);
+}
+
+/* Product Cards */
+.card {
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+    overflow: hidden;
+    height: 100%;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.card-img-top {
+    height: 240px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-text {
+    color: var(--text-muted);
+}
+
+.price-tag {
+    color: var(--accent);
+    font-size: 1.3rem;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+}
+
+.out-of-stock {
+    color: #d9534f;
+    font-weight: 600;
+    background: rgba(217, 83, 79, 0.1);
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+/* Badges */
+.badge {
+    border-radius: var(--radius-pill);
+    padding: 0.4em 0.8em;
+    font-weight: 500;
+}
+
+.badge.bg-light.text-dark {
+    background-color: var(--primary) !important;
+    color: var(--white) !important;
+}
+
+/* Hero Section (Home) */
+.hero-section {
+    background: linear-gradient(135deg, rgba(250,250,245,0.95) 0%, rgba(220,230,222,0.85) 100%), url('https://images.unsplash.com/photo-1466692476868-aef1dfb1e736?q=80&w=2070&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    border-radius: var(--radius-lg);
+    padding: 5rem 3rem;
+    margin-bottom: 4rem;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .hero-section {
+    background: linear-gradient(135deg, rgba(18,26,20,0.95) 0%, rgba(30,45,35,0.85) 100%), url('https://images.unsplash.com/photo-1466692476868-aef1dfb1e736?q=80&w=2070&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-main);
+    margin-bottom: 2rem;
+    max-width: 600px;
+}
+
+/* Footer */
+.footer-custom {
+    background-color: var(--primary);
+    color: rgba(255,255,255,0.8);
+    border-top: none;
+    padding: 3rem 0;
+    margin-top: 5rem;
+}
+
+.footer-custom p {
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+/* Forms & Inputs */
+.form-control, .form-select {
+    border-radius: var(--radius-sm);
+    padding: 0.8rem 1.2rem;
+    border: 1px solid rgba(44, 94, 58, 0.2);
+    background-color: var(--white);
+    color: var(--text-main);
+    transition: var(--transition);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 0.25rem rgba(140, 167, 144, 0.25);
+    background-color: var(--white);
+    color: var(--text-main);
+}
+
+/* Alerts */
+.alert {
+    border-radius: var(--radius-md);
+    border: none;
+    box-shadow: var(--shadow-soft);
+}

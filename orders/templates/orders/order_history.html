@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}ประวัติการสั่งซื้อ - สวนใบไม้{% endblock %}
+
+{% block content %}
+<h3 class="mb-4"><i class="bi bi-receipt"></i> ประวัติการสั่งซื้อของฉัน</h3>
+
+{% if orders %}
+<div class="table-responsive">
+    <table class="table bg-white align-middle">
+        <thead>
+            <tr>
+                <th>เลขที่คำสั่งซื้อ</th>
+                <th>วันที่สั่งซื้อ</th>
+                <th>ยอดรวม</th>
+                <th>สถานะ</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                <td>{{ order.total_price }} บาท</td>
+                <td>
+                    <span class="badge
+                        {% if order.status == 'pending' %}bg-warning text-dark
+                        {% elif order.status == 'shipping' %}bg-info text-dark
+                        {% elif order.status == 'completed' %}bg-success
+                        {% else %}bg-secondary{% endif %}">
+                        {{ order.get_status_display }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
+                        ดูรายละเอียด
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-secondary">คุณยังไม่มีประวัติการสั่งซื้อ</div>
+{% endif %}
+{% endblock %}

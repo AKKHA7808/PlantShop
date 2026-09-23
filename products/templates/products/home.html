@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}หน้าแรก - สวนใบไม้{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <h1 class="hero-title"><i class="bi bi-flower1"></i> ยินดีต้อนรับสู่สวนใบไม้</h1>
+    <p class="hero-subtitle mx-auto">ต้นไม้และดอกไม้ประดับคุณภาพ ส่งตรงถึงบ้านคุณ สร้างพื้นที่สีเขียวในฝันด้วยพันธุ์ไม้ที่คัดสรรมาอย่างดี</p>
+    <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg mt-3">ดูสินค้าทั้งหมด <i class="bi bi-arrow-right ms-2"></i></a>
+</div>
+
+<h3 class="mb-3">สินค้าแนะนำ</h3>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+    {% for product in featured_products %}
+    {% include 'products/_product_card.html' %}
+    {% empty %}
+    <p class="text-muted">ยังไม่มีสินค้าในระบบ</p>
+    {% endfor %}
+</div>
+{% endblock %}
