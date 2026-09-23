@@ -7,6 +7,7 @@ from cart.cart import Cart
 
 from .forms import CheckoutForm
 from .models import Order, OrderDetail
+from products.models import Product
 
 
 @login_required
@@ -18,7 +19,9 @@ def checkout_view(request):
     """
     cart = Cart(request)
 
-    if len(cart) == 0:
+    cart_items = list(cart)
+
+    if not cart_items:
         messages.warning(request, 'ตะกร้าของคุณว่างเปล่า กรุณาเลือกสินค้าก่อนทำการสั่งซื้อ')
         return redirect('products:product_list')
 
@@ -26,40 +29,49 @@ def checkout_view(request):
         form = CheckoutForm(request.POST)
         if form.is_valid():
             with transaction.atomic():
-                # ดึง product ID ทั้งหมดในตะกร้า
-                product_ids = [item['product'].id for item in cart]
-                
-                # ล็อกแถวของสินค้าเหล่านี้ในฐานข้อมูลเพื่อป้องกัน Race Condition
-                products_in_cart = Product.objects.select_for_update().filter(id__in=product_ids)
-                product_map = {p.id: p for p in products_in_cart}
+                product_ids = [item['product'].id for item in cart_items]
+                locked_products = Product.objects.select_for_update().filter(id__in=product_ids)
+                product_map = {p.id: p for p in locked_products}
 
-                # ตรวจสอบสต็อกอีกครั้งก่อนตัดจริง
-                for item in cart:
-                    locked_product = product_map.get(item['product'].id)
-                    if not locked_product or item['quantity'] > locked_product.stock:
-                        stock_left = locked_product.stock if locked_product else 0
+                for item in cart_items:
+                    product = product_map.get(item['product'].id)
+                    if not product:
                         messages.error(
                             request,
-                            f"สินค้า '{item['product'].name}' มีคงเหลือไม่พอ (เหลือ {stock_left} ชิ้น)"
+                            "มีสินค้าบางรายการไม่อยู่ในระบบแล้ว กรุณาตรวจสอบตะกร้าอีกครั้ง"
+                        )
+                        return redirect('cart:cart_detail')
+                    
+                    quantity = item['quantity']
+                    if quantity > product.stock:
+                        messages.error(
+                            request,
+                            f"สินค้า '{product.name}' มีสินค้าไม่เพียงพอ (คงเหลือ {product.stock} ชิ้น)"
                         )
                         return redirect('cart:cart_detail')
 
                 order = form.save(commit=False)
                 order.user = request.user
-                order.total_price = cart.get_total_price()
+                
+                total_price = sum(
+                    product_map[item["product"].id].price * item["quantity"]
+                    for item in cart_items
+                )
+                order.total_price = total_price
                 order.save()
 
-                for item in cart:
-                    locked_product = product_map.get(item['product'].id)
+                for item in cart_items:
+                    product = product_map[item['product'].id]
+                    quantity = item['quantity']
+
                     OrderDetail.objects.create(
                         order=order,
-                        product=locked_product,
-                        quantity=item['quantity'],
-                        price=locked_product.price,
+                        product=product,
+                        quantity=quantity,
+                        price=product.price,
                     )
-                    # ลด stock สินค้าและบันทึกเฉพาะฟิลด์ stock
-                    locked_product.stock -= item['quantity']
-                    locked_product.save(update_fields=['stock'])
+                    product.stock -= quantity
+                    product.save(update_fields=['stock'])
 
                 cart.clear()
 

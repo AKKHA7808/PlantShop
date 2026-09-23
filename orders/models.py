@@ -17,7 +17,7 @@ class Order(models.Model):
     STATUS_CHOICES = [
         (STATUS_PENDING, 'รอดำเนินการ'),
         (STATUS_SHIPPING, 'กำลังจัดส่ง'),
-        (STATUS_COMPLETED, 'สำเร็จ'),
+        (STATUS_COMPLETED, 'จัดส่งสำเร็จ'),
         (STATUS_CANCELLED, 'ยกเลิก'),
     ]
 

@@ -52,6 +52,7 @@ class Cart:
 
         product = Product.objects.filter(id=product_id).first()
         if not product:
+            self.remove(product_id)
             return False, 'ไม่พบสินค้านี้ในระบบ'
 
         if quantity <= 0:
@@ -77,18 +78,19 @@ class Cart:
 
     def __iter__(self):
         """คืนค่ารายการสินค้าในตะกร้าพร้อมข้อมูลสินค้าและราคารวมย่อย"""
-        product_ids = self.cart.keys()
+        product_ids = list(self.cart.keys())
         products = Product.objects.filter(id__in=product_ids)
         products_map = {str(p.id): p for p in products}
 
-        # เก็บรายการสินค้าที่ต้องถูกลบออก (ลบตอนลูปไม่ได้เพราะ Dictionary changed size during iteration)
-        items_to_remove = []
+        missing_ids = set(product_ids) - set(products_map.keys())
+
+        if missing_ids:
+            for product_id in missing_ids:
+                self.cart.pop(product_id, None)
+            self.save()
 
         for product_id, quantity in self.cart.items():
             product = products_map.get(product_id)
-            if not product:
-                items_to_remove.append(product_id)
-                continue
             subtotal = product.price * quantity
             yield {
                 'product': product,
@@ -96,14 +98,8 @@ class Cart:
                 'subtotal': subtotal,
             }
 
-        if items_to_remove:
-            for pid in items_to_remove:
-                del self.cart[pid]
-            self.save()
-
     def __len__(self):
-        # นับเฉพาะสินค้าที่ยังคงอยู่ในระบบเท่านั้น (ถูกคลีนโดย __iter__ แล้ว หรือนับแค่ key ที่ชัวร์)
-        return sum(self.cart.values())
+        return sum(item["quantity"] for item in self)
 
     def get_total_price(self):
         total = Decimal('0')

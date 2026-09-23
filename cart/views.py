@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
 from products.models import Product
@@ -32,6 +33,8 @@ def cart_add_view(request, product_id):
 
     # กลับไปหน้าที่กดมา ถ้าไม่มีให้กลับไปตะกร้า
     next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or 'cart:cart_detail'
+    if not url_has_allowed_host_and_scheme(url=next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        next_url = 'cart:cart_detail'
     return redirect(next_url)
 
 
