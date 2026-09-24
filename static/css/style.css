@@ -20,21 +20,31 @@
     --radius-lg: 24px;
     --radius-pill: 50px;
     --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* Bootstrap overrides */
+    --bs-body-color: var(--text-main);
+    --bs-body-bg: var(--bg-color);
 }
 
 [data-theme="dark"] {
-    --primary: #4a915f; /* Lighter Forest Green for better contrast in dark mode */
-    --primary-light: #5cb376;
-    --secondary: #657a68;
-    --accent: #e8956f;
-    --bg-color: #121a14; /* Very dark green/black */
-    --text-main: #e8eee9;
-    --text-muted: #a3b3a6;
-    --white: #1a241c; /* Dark surface color for cards */
+    --primary: #5cb376; /* Brighter primary for better contrast */
+    --primary-light: #76c78e;
+    --secondary: #8fa392;
+    --accent: #f0a381;
+    --bg-color: #121a14; 
+    --text-main: #ffffff; /* Pure white text for maximum readability */
+    --text-muted: #cbd6ce; /* Lighter muted text */
+    --white: #1a241c; 
     --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
     --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.7);
     --navbar-bg: rgba(18, 26, 20, 0.85);
     --navbar-border: rgba(255, 255, 255, 0.1);
+    
+    /* Bootstrap overrides for Dark Mode */
+    --bs-body-color: var(--text-main);
+    --bs-body-bg: var(--bg-color);
+    --bs-card-bg: var(--white);
+    --bs-card-color: var(--text-main);
 }
 
 body {
@@ -42,6 +52,10 @@ body {
     color: var(--text-main);
     font-family: 'Prompt', 'Outfit', sans-serif;
     -webkit-font-smoothing: antialiased;
+}
+
+.text-muted, .form-text {
+    color: var(--text-muted) !important;
 }
 
 h1, h2, h3, h4, h5, h6, .navbar-brand {
@@ -151,9 +165,10 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
 .card-title {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
+    color: var(--text-main);
 }
 
-.card-text {
+.card-text, .card p {
     color: var(--text-muted);
 }
 
@@ -256,4 +271,17 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     border-radius: var(--radius-md);
     border: none;
     box-shadow: var(--shadow-soft);
+}
+
+/* Tables */
+.table-custom {
+    background-color: var(--white) !important;
+    color: var(--text-main) !important;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+.table-custom th, .table-custom td {
+    background-color: transparent !important;
+    color: var(--text-main) !important;
+    border-bottom-color: rgba(140, 167, 144, 0.2);
 }

@@ -9,12 +9,12 @@
             <form method="post" novalidate>
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label class="form-label" for="id_username">Username</label>
+                    <label class="form-label" for="id_username">ชื่อผู้ใช้งาน (Username)</label>
                     {{ form.username.errors }}
                     <input type="text" name="username" class="form-control" id="id_username" required autofocus>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="id_password">Password</label>
+                    <label class="form-label" for="id_password">รหัสผ่าน (Password)</label>
                     {{ form.password.errors }}
                     <input type="password" name="password" class="form-control" id="id_password" required>
                 </div>

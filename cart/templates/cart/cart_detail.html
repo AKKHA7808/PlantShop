@@ -6,7 +6,7 @@
 
 {% if cart|length > 0 %}
 <div class="table-responsive">
-    <table class="table align-middle bg-white">
+    <table class="table align-middle table-custom">
         <thead>
             <tr>
                 <th>สินค้า</th>
@@ -20,7 +20,7 @@
             {% for item in cart %}
             <tr>
                 <td>
-                    <a href="{% url 'products:product_detail' item.product.pk %}" class="text-decoration-none text-dark">
+                    <a href="{% url 'products:product_detail' item.product.pk %}" class="text-decoration-none" style="color: var(--text-main);">
                         {{ item.product.name }}
                     </a>
                 </td>

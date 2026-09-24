@@ -23,6 +23,17 @@ class RegisterForm(UserCreationForm):
         # ใส่ class 'form-control' ให้ทุก field เพื่อให้หน้าตาตรงกับ Bootstrap 5
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
+            
+        # เปลี่ยนข้อความช่วยเหลือเป็นภาษาไทย
+        if 'username' in self.fields:
+            self.fields['username'].label = 'ชื่อผู้ใช้งาน'
+            self.fields['username'].help_text = 'ความยาวไม่เกิน 150 ตัวอักษร ใช้ได้เฉพาะตัวอักษร, ตัวเลข และ @/./+/-/_'
+        if 'password1' in self.fields:
+            self.fields['password1'].label = 'รหัสผ่าน'
+            self.fields['password1'].help_text = 'รหัสผ่านต้องไม่สั้นเกินไป และไม่ควรใช้ข้อมูลส่วนตัวที่เดาง่าย'
+        if 'password2' in self.fields:
+            self.fields['password2'].label = 'ยืนยันรหัสผ่าน'
+            self.fields['password2'].help_text = 'กรอกรหัสผ่านอีกครั้งเพื่อยืนยันความถูกต้อง'
 
     def clean_email(self):
         email = self.cleaned_data['email']
