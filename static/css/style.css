@@ -45,6 +45,7 @@
     --bs-body-bg: var(--bg-color);
     --bs-card-bg: var(--white);
     --bs-card-color: var(--text-main);
+    --bs-light-rgb: 30, 42, 33; /* Darker placeholder background */
 }
 
 body {

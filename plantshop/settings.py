@@ -18,6 +18,15 @@ DEBUG = True
 # ควรระบุโดเมนจริงใน production เช่น ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 ALLOWED_HOSTS = ['*']
 
+# อนุญาตให้ Ngrok ส่งข้อมูล POST ได้โดยไม่ติด 403 CSRF Error
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ngrok-free.app',
+    'https://*.ngrok-free.dev',
+    'https://*.ngrok.io',
+    'https://*.ngrok.app',
+    'https://*.ngrok.dev',
+]
+
 # --- Applications ---
 INSTALLED_APPS = [
     'django.contrib.admin',
