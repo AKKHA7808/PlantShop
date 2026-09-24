@@ -25,8 +25,10 @@ def product_list_view(request):
         products = products.filter(name__icontains=query)
 
     category_id = request.GET.get('category', '')
-    if category_id:
-        products = products.filter(category_id=category_id)
+    if category_id.isdigit():
+        products = products.filter(category_id=int(category_id))
+    else:
+        category_id = ''
 
     categories = Category.objects.all()
 

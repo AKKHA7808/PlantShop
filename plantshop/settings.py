@@ -124,14 +124,14 @@ JAZZMIN_SETTINGS = {
     "search_model": ["accounts.User", "products.Product", "orders.Order"],
     "show_ui_builder": False,
     "topmenu_links": [
-        {"name": "หน้าแรกเว็บไซต์",  "url": "products:home", "permissions": ["auth.view_user"]},
+        {"name": "หน้าแรกเว็บไซต์",  "url": "products:home", "permissions": ["accounts.view_user"]},
     ],
     "icons": {
         "accounts.User": "fas fa-users",
         "products.Category": "fas fa-tags",
         "products.Product": "fas fa-leaf",
         "orders.Order": "fas fa-shopping-cart",
-        "orders.OrderItem": "fas fa-box",
+        "orders.OrderDetail": "fas fa-box",
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
