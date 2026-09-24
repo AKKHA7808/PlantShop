@@ -29,6 +29,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 # --- Applications ---
 INSTALLED_APPS = [
+    'jazzmin',  # ต้องอยู่บนสุดของ INSTALLED_APPS เสมอ
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -113,3 +114,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'products:home'
 LOGOUT_REDIRECT_URL = 'products:home'
+
+# --- Jazzmin Admin Settings ---
+JAZZMIN_SETTINGS = {
+    "site_title": "ระบบหลังบ้าน สวนใบไม้",
+    "site_header": "สวนใบไม้ Admin",
+    "site_brand": "🌿 PlantShop",
+    "welcome_sign": "ยินดีต้อนรับสู่ระบบหลังบ้าน สวนใบไม้",
+    "search_model": ["accounts.User", "products.Product", "orders.Order"],
+    "show_ui_builder": False,
+    "topmenu_links": [
+        {"name": "หน้าแรกเว็บไซต์",  "url": "products:home", "permissions": ["auth.view_user"]},
+    ],
+    "icons": {
+        "accounts.User": "fas fa-users",
+        "products.Category": "fas fa-tags",
+        "products.Product": "fas fa-leaf",
+        "orders.Order": "fas fa-shopping-cart",
+        "orders.OrderItem": "fas fa-box",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",
+    "dark_mode_theme": "darkly",
+}
