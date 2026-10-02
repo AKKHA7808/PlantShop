@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}สินค้าทั้งหมด - สวนใบไม้{% endblock %}
+
+{% block content %}
+<h3 class="mb-3">
+    {% if query %}ผลการค้นหา: "{{ query }}"{% else %}สินค้าทั้งหมด{% endif %}
+</h3>
+
+<!-- ฟอร์มค้นหาและกรองหมวดหมู่ -->
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-8">
+        <input type="text" name="q" class="form-control" placeholder="ค้นหาชื่อสินค้า..." value="{{ query }}">
+    </div>
+    <div class="col-md-3">
+        <select name="category" class="form-select">
+            <option value="">-- ทุกหมวดหมู่ --</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>
+                {{ cat.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-1">
+        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i></button>
+    </div>
+</form>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+    {% for product in products %}
+    {% include 'products/_product_card.html' %}
+    {% empty %}
+    <p class="text-muted">ไม่พบสินค้าที่ค้นหา</p>
+    {% endfor %}
+</div>
+{% endblock %}
