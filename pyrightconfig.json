@@ -1,0 +1,7 @@
+{
+  "venvPath": "plantshop",
+  "venv": "venv",
+  "extraPaths": [
+    "plantshop"
+  ]
+}

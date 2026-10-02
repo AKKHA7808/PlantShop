@@ -1,0 +1,7 @@
+{
+    "python.analysis.extraPaths": [
+        "c:/Users/Lenovo/Downloads/plantshop_full/plantshop"
+    ],
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.defaultInterpreterPath": "c:/Users/Lenovo/Downloads/plantshop_full/plantshop/venv/Scripts/python.exe"
+}
