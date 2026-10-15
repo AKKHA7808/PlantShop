@@ -3,28 +3,37 @@ Django settings for plantshop project.
 โปรเจกต์ร้านขายต้นไม้และดอกไม้ประดับออนไลน์ (สำหรับใช้ในงานเรียน)
 """
 
+import os
+import shutil
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# --- Vercel Support ---
+# Vercel serverless has a read-only filesystem except /tmp
+# Copy db.sqlite3 to /tmp on cold start so Django can write to it
+IS_VERCEL = os.environ.get('VERCEL', '') == '1'
+if IS_VERCEL:
+    _src_db = BASE_DIR / 'db.sqlite3'
+    _tmp_db = Path('/tmp/db.sqlite3')
+    if not _tmp_db.exists() and _src_db.exists():
+        shutil.copy2(_src_db, _tmp_db)
+
 # --- Security ---
-# หมายเหตุ: ใน production จริงควรเก็บ SECRET_KEY ไว้ใน environment variable
-# เช่น: import os; SECRET_KEY = os.environ.get('SECRET_KEY', 'default-key')
-SECRET_KEY = 'django-insecure-change-this-key-for-production-usage'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-key-for-production-usage')
 
-# ควรใช้ os.environ.get('DEBUG', 'True') == 'True' ใน production
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# ควรระบุโดเมนจริงใน production เช่น ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
-# อนุญาตให้ Ngrok ส่งข้อมูล POST ได้โดยไม่ติด 403 CSRF Error
+# อนุญาตให้ Ngrok / Vercel ส่งข้อมูล POST ได้โดยไม่ติด 403 CSRF Error
 CSRF_TRUSTED_ORIGINS = [
     'https://*.ngrok-free.app',
     'https://*.ngrok-free.dev',
     'https://*.ngrok.io',
     'https://*.ngrok.app',
     'https://*.ngrok.dev',
+    'https://*.vercel.app',
 ]
 
 # --- Applications ---
@@ -46,6 +55,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files on Vercel
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,10 +88,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'plantshop.wsgi.application'
 
 # --- Database (SQLite) ---
+# On Vercel: use /tmp (only writable path) — data resets on cold start
+# Locally: use project directory as usual
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': Path('/tmp/db.sqlite3') if IS_VERCEL else BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -104,6 +116,8 @@ USE_TZ = True
 # --- Static & Media files ---
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
