@@ -20,6 +20,15 @@
                 </div>
                 <button type="submit" class="btn btn-primary w-100">เข้าสู่ระบบ</button>
             </form>
+            {% if allow_demo_admin %}
+            <hr class="my-3">
+            <form method="post" action="{% url 'accounts:demo_admin_login' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-shield-lock"></i> เข้าสู่ระบบ Admin อัตโนมัติ (Demo)
+                </button>
+            </form>
+            {% endif %}
             <p class="mt-3 text-center mb-0">
                 ยังไม่มีบัญชี? <a href="{% url 'accounts:register' %}">สมัครสมาชิก</a>
             </p>

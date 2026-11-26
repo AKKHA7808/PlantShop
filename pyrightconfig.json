@@ -1,7 +1,4 @@
 {
-  "venvPath": "plantshop",
-  "venv": "venv",
-  "extraPaths": [
-    "plantshop"
-  ]
+  "venvPath": ".",
+  "venv": "venv"
 }

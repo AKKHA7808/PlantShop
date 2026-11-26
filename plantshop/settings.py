@@ -5,6 +5,7 @@ Django settings for plantshop project.
 
 import os
 import shutil
+from django.contrib.messages import constants as messages
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,11 +19,12 @@ if IS_VERCEL:
     _tmp_db = Path('/tmp/db.sqlite3')
     if not _tmp_db.exists() and _src_db.exists():
         shutil.copy2(_src_db, _tmp_db)
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # --- Security ---
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-key-for-production-usage')
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DEBUG', 'False' if IS_VERCEL else 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
@@ -117,7 +119,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+    WHITENOISE_USE_FINDERS = True
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -137,6 +145,8 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "ยินดีต้อนรับสู่ระบบหลังบ้าน สวนใบไม้",
     "search_model": ["accounts.User", "products.Product", "orders.Order"],
     "show_ui_builder": False,
+    "custom_css": "css/admin_custom.css",
+    "copyright": "สวนใบไม้ (PlantShop)",
     "topmenu_links": [
         {"name": "หน้าแรกเว็บไซต์",  "url": "products:home", "permissions": ["accounts.view_user"]},
     ],
@@ -154,4 +164,16 @@ JAZZMIN_SETTINGS = {
 JAZZMIN_UI_TWEAKS = {
     "theme": "flatly",
     "dark_mode_theme": "darkly",
+    "navbar": "navbar-white navbar-light",
+    "accent": "accent-success",
+    "sidebar": "sidebar-dark-success",
+    "sidebar_nav_flat_style": True,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
+    },
 }

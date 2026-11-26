@@ -1,12 +1,17 @@
 <div class="col">
-    <div class="card h-100">
-        {% if product.image %}
-        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-        {% else %}
-        <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted">
-            <i class="bi bi-flower2" style="font-size: 3rem;"></i>
+    <div class="card product-card h-100">
+        <div class="card-img-wrapper">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+            {% else %}
+            <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted">
+                <i class="bi bi-flower2" style="font-size: 3rem;"></i>
+            </div>
+            {% endif %}
+            {% if product.category %}
+            <span class="category-badge">{{ product.category.name }}</span>
+            {% endif %}
         </div>
-        {% endif %}
         <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ product.name }}</h5>
             <p class="price-tag">{{ product.price }} ฿</p>
