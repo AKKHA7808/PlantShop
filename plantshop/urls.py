@@ -16,10 +16,10 @@ urlpatterns = [
     path('', include('products.urls')),
 ]
 
-# ให้ Django serve ไฟล์รูปภาพสินค้าตอน Debug และบน Vercel
+# ให้ Django serve ไฟล์รูปภาพสินค้า
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-elif getattr(settings, 'IS_VERCEL', False):
+else:
     urlpatterns += [
         re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     ]
