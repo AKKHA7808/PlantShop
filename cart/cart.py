@@ -91,6 +91,8 @@ class Cart:
 
         for product_id, quantity in self.cart.items():
             product = products_map.get(product_id)
+            if not product:
+                continue
             subtotal = product.price * quantity
             yield {
                 'product': product,
