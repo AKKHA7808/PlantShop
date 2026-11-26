@@ -139,14 +139,14 @@ LOGOUT_REDIRECT_URL = 'products:home'
 
 # --- Jazzmin Admin Settings ---
 JAZZMIN_SETTINGS = {
-    "site_title": "ระบบหลังบ้าน สวนใบไม้",
-    "site_header": "สวนใบไม้ Admin",
-    "site_brand": "🌿 PlantShop",
-    "welcome_sign": "ยินดีต้อนรับสู่ระบบหลังบ้าน สวนใบไม้",
+    "site_title": "ระบบหลังบ้าน Botanica",
+    "site_header": "Botanica Admin",
+    "site_brand": "🌿 Botanica",
+    "welcome_sign": "ยินดีต้อนรับสู่ระบบหลังบ้าน Botanica",
     "search_model": ["accounts.User", "products.Product", "orders.Order"],
     "show_ui_builder": False,
     "custom_css": "css/admin_custom.css",
-    "copyright": "สวนใบไม้ (PlantShop)",
+    "copyright": "Botanica",
     "topmenu_links": [
         {"name": "หน้าแรกเว็บไซต์",  "url": "products:home", "permissions": ["accounts.view_user"]},
     ],

@@ -75,7 +75,7 @@ def checkout_view(request):
 
                 cart.clear()
 
-            messages.success(request, 'สั่งซื้อสำเร็จ! ขอบคุณที่ใช้บริการสวนใบไม้')
+            messages.success(request, 'สั่งซื้อสำเร็จ! ขอบคุณที่ใช้บริการ Botanica')
             return redirect('orders:order_success', order_id=order.id)
     else:
         # เติมข้อมูลผู้ใช้ให้อัตโนมัติจากโปรไฟล์ (ถ้ามี)
